@@ -102,8 +102,9 @@ control MyIngress(inout headers hdr,
         mark_to_drop(standard_metadata);
     }
     action set_ecmp_select(bit<16> ecmp_base, bit<32> ecmp_count) {
-        /* TODO: hash on 5-tuple and save the hash result in meta.ecmp_select 
-           so that the ecmp_nhop table can use it to make a forwarding decision accordingly */
+        hash(meta.ecmp_select, HashAlgorithm.crc16, ecmp_base,
+             { hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.ipv4.protocol,
+               hdr.tcp.srcPort, hdr.tcp.dstPort }, ecmp_count);
     }
     action set_nhop(bit<48> nhop_dmac, bit<32> nhop_ipv4, bit<9> port) {
         hdr.ethernet.dstAddr = nhop_dmac;
