@@ -56,7 +56,6 @@ struct headers {
 *********************** P A R S E R  ***********************************
 *************************************************************************/
 
-// TODO: Update the parser to parse the myTunnel header as well
 parser MyParser(packet_in packet,
                 out headers hdr,
                 inout metadata meta,
@@ -69,6 +68,15 @@ parser MyParser(packet_in packet,
     state parse_ethernet {
         packet.extract(hdr.ethernet);
         transition select(hdr.ethernet.etherType) {
+            TYPE_MYTUNNEL : parse_mytunnel;
+            TYPE_IPV4 : parse_ipv4;
+            default : accept;
+        }
+    }
+
+    state parse_mytunnel {
+        packet.extract(hdr.myTunnel);
+        transition select(hdr.myTunnel.proto_id) {
             TYPE_IPV4 : parse_ipv4;
             default : accept;
         }
