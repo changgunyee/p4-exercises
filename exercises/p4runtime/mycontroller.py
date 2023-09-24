@@ -67,9 +67,12 @@ def writeTunnelRules(p4info_helper, ingress_sw, egress_sw, tunnel_id,
     # and you will need to select the port dynamically for each switch based on
     # your topology.
 
-    # TODO build the transit rule
-    # TODO install the transit rule on the ingress switch
-    print "TODO Install transit tunnel rule"
+    table_entry = p4info_helper.buildTableEntry(
+        table_name="MyIngress.myTunnel_exact",
+        match_fields={"hdr.myTunnel.dst_id": tunnel_id},
+        action_name="MyIngress.myTunnel_forward",
+        action_params={"port": SWITCH_TO_SWITCH_PORT})
+    ingress_sw.WriteTableEntry(table_entry)
 
     # 3) Tunnel Egress Rule
     # For our simple topology, the host will always be located on the
