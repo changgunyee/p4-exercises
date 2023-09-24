@@ -169,9 +169,8 @@ def main(p4info_file_path, bmv2_file_path):
         writeTunnelRules(p4info_helper, ingress_sw=s2, egress_sw=s1, tunnel_id=200,
                          dst_eth_addr="08:00:00:00:01:11", dst_ip_addr="10.0.1.1")
 
-        # TODO Uncomment the following two lines to read table entries from s1 and s2
-        # readTableRules(p4info_helper, s1)
-        # readTableRules(p4info_helper, s2)
+        readTableRules(p4info_helper, s1)
+        readTableRules(p4info_helper, s2)
 
         # Print the tunnel counters every 2 seconds
         while True:
